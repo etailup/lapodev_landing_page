@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="it" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lapo | AI & Automation Consultant</title>
-    <meta name="description" content="Ready-to-test MVPs and proven-to-work automations. Stop burning cash on slow development.">
+    <meta name="description" content="MVP pronti per il test e automazioni comprovate. Smetti di bruciare budget in sviluppi lenti.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -110,6 +110,19 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Language Switcher Styles */
+        .lang-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+        .lang-btn.active {
+            opacity: 1;
+            color: #66FCF1;
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+        }
     </style>
 </head>
 <body class="antialiased relative">
@@ -131,19 +144,31 @@
                 </div>
                 
                 <!-- Desktop Menu -->
-                <div class="hidden md:block">
+                <div class="hidden md:flex items-center">
                     <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#problems" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium">Why Me?</a>
-                        <a href="#services" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium">Services</a>
-                        <a href="#process" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium">Process</a>
-                        <a href="#contact" class="bg-brand-cyan text-brand-dark hover:bg-white hover:text-black px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 glow-on-hover">
-                            Book a Consultation
+                        <a href="#problems" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n="nav_why">Perché Io?</a>
+                        <a href="#services" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n="nav_services">Servizi</a>
+                        <a href="#process" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n="nav_process">Metodo</a>
+                        <a href="#contact" class="bg-brand-cyan text-brand-dark hover:bg-white hover:text-black px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 glow-on-hover" data-i18n="nav_book">
+                            Prenota Consulenza
                         </a>
+                    </div>
+                    <!-- Language Switcher -->
+                    <div class="ml-8 flex items-center space-x-2 border-l border-gray-700 pl-6">
+                        <button onclick="setLanguage('en')" class="lang-btn hover:text-white" id="btn-en">EN</button>
+                        <span class="text-gray-600">/</span>
+                        <button onclick="setLanguage('it')" class="lang-btn hover:text-white active" id="btn-it">IT</button>
                     </div>
                 </div>
 
                 <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
+                <div class="md:hidden flex items-center space-x-6">
+                    <!-- Mobile Lang Switch -->
+                    <div class="flex items-center space-x-2">
+                        <button onclick="setLanguage('en')" class="text-xs font-bold text-gray-400 hover:text-brand-cyan" id="mobile-btn-en">EN</button>
+                        <span class="text-gray-600 text-xs">|</span>
+                        <button onclick="setLanguage('it')" class="text-xs font-bold text-brand-cyan" id="mobile-btn-it">IT</button>
+                    </div>
                     <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
@@ -154,10 +179,10 @@
         <!-- Mobile Menu Panel -->
         <div id="mobile-menu" class="hidden md:hidden glass-panel absolute w-full border-b border-gray-700">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#problems" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium">Why Me?</a>
-                <a href="#services" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium">Services</a>
-                <a href="#process" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium">Process</a>
-                <a href="#contact" class="text-brand-cyan font-bold block px-3 py-2 rounded-md text-base">Book Consultation</a>
+                <a href="#problems" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium" data-i18n="nav_why">Perché Io?</a>
+                <a href="#services" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium" data-i18n="nav_services">Servizi</a>
+                <a href="#process" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium" data-i18n="nav_process">Metodo</a>
+                <a href="#contact" class="text-brand-cyan font-bold block px-3 py-2 rounded-md text-base" data-i18n="nav_book">Prenota Consulenza</a>
             </div>
         </div>
     </nav>
@@ -167,25 +192,25 @@
         <div class="text-center max-w-4xl mx-auto z-10">
             <div class="inline-flex items-center px-4 py-2 rounded-full glass-panel mb-8 border border-brand-cyan/30 animate-float">
                 <span class="w-2 h-2 rounded-full bg-brand-cyan mr-2 animate-pulse"></span>
-                <span class="text-sm font-medium text-brand-cyan tracking-wide uppercase">Accepting New Clients for Q4</span>
+                <span class="text-sm font-medium text-brand-cyan tracking-wide uppercase" data-i18n="hero_badge">Accetto Nuovi Clienti per il Q4</span>
             </div>
             
             <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
-                Stop Dreaming. <br>
-                <span class="gradient-text">Start Testing.</span>
+                <span data-i18n="hero_title_1">Smetti di Sognare.</span> <br>
+                <span class="gradient-text" data-i18n="hero_title_2">Inizia a Testare.</span>
             </h1>
             
-            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                I build <strong>ready-to-test MVPs</strong>, <strong>complex agentic SaaS</strong>, and <strong>proven automations</strong> for founders who value speed over bureaucracy.
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed" data-i18n="hero_desc">
+                Creo <strong>MVP pronti per il lancio</strong>, <strong>SaaS complessi</strong> basati su AI e <strong>automazioni comprovate</strong> per founder che scelgono la velocità.
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#contact" class="w-full sm:w-auto bg-brand-cyan text-brand-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-all duration-300 transform hover:-translate-y-1 glow-on-hover flex items-center justify-center">
-                    Build My Vision
-                    <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                <a href="#contact" class="w-full sm:w-auto bg-brand-cyan text-brand-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-all duration-300 transform hover:-translate-y-1 glow-on-hover flex items-center justify-center group">
+                    <span data-i18n="hero_cta_1">Costruisci la tua Visione</span>
+                    <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                 </a>
-                <a href="#services" class="w-full sm:w-auto border border-gray-600 hover:border-brand-cyan text-gray-300 hover:text-brand-cyan px-8 py-4 rounded-lg font-medium transition-all duration-300 bg-brand-dark/50 backdrop-blur-sm">
-                    Explore Services
+                <a href="#services" class="w-full sm:w-auto border border-gray-600 hover:border-brand-cyan text-gray-300 hover:text-brand-cyan px-8 py-4 rounded-lg font-medium transition-all duration-300 bg-brand-dark/50 backdrop-blur-sm" data-i18n="hero_cta_2">
+                    Esplora i Servizi
                 </a>
             </div>
         </div>
@@ -195,8 +220,8 @@
     <section id="problems" class="py-24 relative">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">The Traditional Dev Cycle is <span class="text-red-500">Broken</span></h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">You have an idea, but execution is killing your momentum. Does this sound familiar?</p>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="prob_title">Lo Sviluppo Tradizionale è <span class="text-red-500">Rotto</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto" data-i18n="prob_subtitle">Hai un'idea, ma l'esecuzione sta uccidendo il tuo slancio. Ti suona familiare?</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -205,9 +230,9 @@
                     <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
                         <i data-lucide="hourglass" class="text-red-500 w-6 h-6"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">"It takes 6 months to launch"</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        Traditional agencies over-engineer before you even validate the market. You burn runway while your competitors launch.
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="prob_1_title">"Ci vogliono 6 mesi"</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n="prob_1_desc">
+                        Le agenzie tradizionali complicano tutto prima ancora che tu validi il mercato. Bruci budget mentre i competitor lanciano.
                     </p>
                 </div>
 
@@ -216,9 +241,9 @@
                     <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
                         <i data-lucide="wallet" class="text-red-500 w-6 h-6"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">"Developers are expensive"</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        Hiring a CTO or a full team for an unproven idea is financial suicide. You need output, not a payroll liability.
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="prob_2_title">"Sviluppare costa troppo"</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n="prob_2_desc">
+                        Assumere un CTO o un team intero per un'idea non provata è un suicidio finanziario. Ti servono risultati, non stipendi fissi.
                     </p>
                 </div>
 
@@ -227,9 +252,9 @@
                     <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
                         <i data-lucide="file-warning" class="text-red-500 w-6 h-6"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">"Manual Ops Hell"</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        You're scaling, but your backend is a mess of spreadsheets and manual data entry. You're working 16h days just to keep up.
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="prob_3_title">"Inferno Operativo"</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n="prob_3_desc">
+                        Stai scalando, ma il backend è un caos di fogli di calcolo e data entry manuale. Lavori 16 ore al giorno solo per stare al passo.
                     </p>
                 </div>
             </div>
@@ -243,92 +268,92 @@
 
         <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
             <div class="text-center mb-20 reveal">
-                <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm">What I Do</span>
-                <h2 class="font-display text-3xl md:text-5xl font-bold text-white mt-2">Engineering for Speed & Intelligence</h2>
+                <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm" data-i18n="serv_badge">Cosa Faccio</span>
+                <h2 class="font-display text-3xl md:text-5xl font-bold text-white mt-2" data-i18n="serv_title">Ingegneria per Velocità e Intelligenza</h2>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Service 1: MVP -->
                 <div class="glass-panel p-8 rounded-3xl border border-brand-cyan/20 hover:border-brand-cyan/60 transition-all duration-300 reveal">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-2xl font-display font-bold text-white">MVP Sprint</h3>
+                        <h3 class="text-2xl font-display font-bold text-white" data-i18n="serv_1_title">Sprint MVP</h3>
                         <i data-lucide="rocket" class="text-brand-cyan w-8 h-8"></i>
                     </div>
-                    <p class="text-gray-300 text-base mb-6 h-24">
-                        Go from napkin sketch to working product in weeks. I build functional, scalable MVPs designed to get you your first paying customers immediately.
+                    <p class="text-gray-300 text-base mb-6 h-24" data-i18n="serv_1_desc">
+                        Dallo schizzo al prodotto funzionante in settimane. Costruisco MVP scalabili progettati per ottenere subito i primi clienti paganti.
                     </p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-brand-cyan w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Rapid prototyping & dev</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_1_li1">Prototipazione rapida</span>
                         </li>
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-brand-cyan w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Modern Stack (Next.js/Supabase)</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_1_li2">Stack Moderno (Next.js/Supabase)</span>
                         </li>
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-brand-cyan w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Stripe Integration Ready</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_1_li3">Integrazione Stripe Pronta</span>
                         </li>
                     </ul>
-                    <a href="#contact" class="text-brand-cyan font-bold hover:text-white flex items-center transition-colors mt-auto">
-                        Start Building <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                    <a href="#contact" class="text-brand-cyan font-bold hover:text-white flex items-center transition-colors mt-auto group">
+                        <span data-i18n="serv_cta_start">Inizia a Costruire</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
 
-                <!-- Service 2: Agentic SaaS (NEW) -->
+                <!-- Service 2: Agentic SaaS -->
                 <div class="glass-panel p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500/60 transition-all duration-300 reveal" style="transition-delay: 100ms;">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-2xl font-display font-bold text-white">Agentic SaaS</h3>
+                        <h3 class="text-2xl font-display font-bold text-white" data-i18n="serv_2_title">SaaS Agentici</h3>
                         <i data-lucide="brain-circuit" class="text-purple-400 w-8 h-8"></i>
                     </div>
-                    <p class="text-gray-300 text-base mb-6 h-24">
-                        Building the next big thing? I engineer complex, multi-agent systems where AI autonomously executes tasks, plans strategies, and creates value.
+                    <p class="text-gray-300 text-base mb-6 h-24" data-i18n="serv_2_desc">
+                        Costruisci la prossima big thing? Ingegnerizzo sistemi complessi multi-agente dove l'AI esegue task e crea valore autonomamente.
                     </p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-purple-400 w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Multi-Agent Systems (CrewAI/LangGraph)</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_2_li1">Sistemi Multi-Agent (CrewAI/LangGraph)</span>
                         </li>
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-purple-400 w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">RAG & Vector DB Implementation</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_2_li2">RAG & Vector DB</span>
                         </li>
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-purple-400 w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Cognitive Architectures</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_2_li3">Architetture Cognitive</span>
                         </li>
                     </ul>
-                    <a href="#contact" class="text-purple-400 font-bold hover:text-white flex items-center transition-colors mt-auto">
-                        Discuss Strategy <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                    <a href="#contact" class="text-purple-400 font-bold hover:text-white flex items-center transition-colors mt-auto group">
+                        <span data-i18n="serv_cta_discuss">Discuti Strategia</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
 
                 <!-- Service 3: Automation -->
                 <div class="glass-panel p-8 rounded-3xl border border-brand-teal/20 hover:border-brand-teal/60 transition-all duration-300 reveal" style="transition-delay: 200ms;">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-2xl font-display font-bold text-white">Business Ops</h3>
+                        <h3 class="text-2xl font-display font-bold text-white" data-i18n="serv_3_title">Business Ops</h3>
                         <i data-lucide="bot" class="text-brand-teal w-8 h-8"></i>
                     </div>
-                    <p class="text-gray-300 text-base mb-6 h-24">
-                        Eliminate manual work. I create custom workflows that handle customer support, lead gen, and data processing while you sleep.
+                    <p class="text-gray-300 text-base mb-6 h-24" data-i18n="serv_3_desc">
+                        Elimina il lavoro manuale. Creo workflow personalizzati che gestiscono supporto clienti, lead gen e processi dati mentre dormi.
                     </p>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-brand-teal w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Workflow Automation (n8n/Zapier)</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_3_li1">Automazione Workflow (n8n/Zapier)</span>
                         </li>
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-brand-teal w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Custom Internal Tools</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_3_li2">Tool Interni Custom</span>
                         </li>
                         <li class="flex items-start">
                             <i data-lucide="check-circle-2" class="text-brand-teal w-5 h-5 mr-3 mt-1"></i>
-                            <span class="text-gray-400 text-sm">Data Scraping & Enrichment</span>
+                            <span class="text-gray-400 text-sm" data-i18n="serv_3_li3">Scraping & Arricchimento Dati</span>
                         </li>
                     </ul>
-                    <a href="#contact" class="text-brand-teal font-bold hover:text-white flex items-center transition-colors mt-auto">
-                        Automate Now <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                    <a href="#contact" class="text-brand-teal font-bold hover:text-white flex items-center transition-colors mt-auto group">
+                        <span data-i18n="serv_cta_automate">Automatizza Ora</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
             </div>
@@ -339,7 +364,7 @@
     <section id="process" class="py-24 relative">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-white">How We Work</h2>
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-white" data-i18n="proc_title">Come Lavoro</h2>
             </div>
 
             <div class="relative">
@@ -350,8 +375,8 @@
                     <!-- Step 1 -->
                     <div class="relative flex flex-col md:flex-row items-center justify-between reveal">
                         <div class="md:w-5/12 text-right order-2 md:order-1 pr-0 md:pr-8">
-                            <h3 class="text-xl font-bold text-white mb-2">Discovery & Strategy</h3>
-                            <p class="text-gray-400">We hop on a call to dissect your problem. No fluff. We define the scope, the "Must-Haves," and the fastest path to ROI.</p>
+                            <h3 class="text-xl font-bold text-white mb-2" data-i18n="proc_1_title">Scoperta e Strategia</h3>
+                            <p class="text-gray-400" data-i18n="proc_1_desc">Analizziamo il problema in una call. Niente fuffa. Definiamo lo scopo, i "Must-Have" e il percorso più veloce per il ROI.</p>
                         </div>
                         <div class="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 bg-brand-cyan rounded-full flex items-center justify-center z-10 order-1 md:order-2 shadow-[0_0_15px_rgba(102,252,241,0.5)]">
                             <span class="text-brand-dark font-bold">1</span>
@@ -366,16 +391,16 @@
                             <span class="text-brand-cyan font-bold">2</span>
                         </div>
                         <div class="md:w-5/12 text-left pl-0 md:pl-8 order-3">
-                            <h3 class="text-xl font-bold text-white mb-2">Rapid Build</h3>
-                            <p class="text-gray-400">I go dark and code. You get regular updates, but I focus on shipping code, not slide decks. You see progress in days.</p>
+                            <h3 class="text-xl font-bold text-white mb-2" data-i18n="proc_2_title">Build Rapida</h3>
+                            <p class="text-gray-400" data-i18n="proc_2_desc">Mi chiudo in modalità focus e programmo. Ricevi aggiornamenti costanti, ma mi concentro sul codice, non sulle slide. Vedi progressi in giorni.</p>
                         </div>
                     </div>
 
                     <!-- Step 3 -->
                     <div class="relative flex flex-col md:flex-row items-center justify-between reveal">
                         <div class="md:w-5/12 text-right order-2 md:order-1 pr-0 md:pr-8">
-                            <h3 class="text-xl font-bold text-white mb-2">Launch & Handoff</h3>
-                            <p class="text-gray-400">We deploy. I train you on the system. You own the code, the accounts, and the IP. No vendor lock-in.</p>
+                            <h3 class="text-xl font-bold text-white mb-2" data-i18n="proc_3_title">Lancio e Consegna</h3>
+                            <p class="text-gray-400" data-i18n="proc_3_desc">Mettiamo in produzione. Ti formo sul sistema. Il codice, gli account e la proprietà intellettuale sono tuoi. Nessun vincolo nascosto.</p>
                         </div>
                         <div class="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 bg-brand-cyan rounded-full flex items-center justify-center z-10 order-1 md:order-2 shadow-[0_0_15px_rgba(102,252,241,0.5)]">
                             <span class="text-brand-dark font-bold">3</span>
@@ -392,22 +417,22 @@
         <div class="absolute inset-0 bg-gradient-to-t from-brand-cyan/10 to-transparent pointer-events-none"></div>
         
         <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal">
-            <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6">Ready to scale?</h2>
-            <p class="text-xl text-gray-400 mb-10">
-                I only take on 3 clients per month to ensure quality delivery.<br>
-                Let's see if we're a good fit.
+            <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6" data-i18n="cta_title">Pronto a scalare?</h2>
+            <p class="text-xl text-gray-400 mb-10" data-i18n="cta_desc">
+                Accetto solo 3 clienti al mese per garantire la massima qualità.<br>
+                Vediamo se siamo il giusto fit.
             </p>
             
             <div class="glass-panel p-8 rounded-2xl max-w-xl mx-auto transform hover:scale-[1.02] transition-transform duration-300">
                 <div class="flex flex-col space-y-4">
                     <a href="mailto:lapo@example.com" class="w-full bg-brand-cyan text-brand-dark py-4 rounded-lg font-bold text-lg hover:bg-white transition-all duration-300 glow-on-hover flex items-center justify-center group">
                         <i data-lucide="calendar-days" class="mr-2 w-5 h-5 group-hover:rotate-12 transition-transform"></i>
-                        Book a Discovery Call
+                        <span data-i18n="cta_btn">Prenota una Discovery Call</span>
                     </a>
                     
                     <div class="flex items-center justify-center space-x-4 mt-4">
                         <div class="h-px bg-gray-700 flex-1"></div>
-                        <span class="text-gray-500 text-sm uppercase">Or email me directly</span>
+                        <span class="text-gray-500 text-sm uppercase" data-i18n="cta_or">O scrivimi direttamente</span>
                         <div class="h-px bg-gray-700 flex-1"></div>
                     </div>
 
@@ -415,7 +440,7 @@
                         <code class="text-brand-cyan">lapo@consulting.com</code>
                         <button onclick="copyEmail()" class="text-gray-400 hover:text-white transition-colors relative group">
                             <i data-lucide="copy" class="w-5 h-5"></i>
-                            <span id="copy-tooltip" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity">Copy</span>
+                            <span id="copy-tooltip" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity" data-i18n="tooltip_copy">Copia</span>
                         </button>
                     </div>
                 </div>
@@ -423,11 +448,150 @@
         </div>
 
         <footer class="mt-20 text-center text-gray-600 text-sm">
-            <p>&copy; 2025 Lapo Consulting. All Systems Operational.</p>
+            <p data-i18n="footer_text">&copy; 2025 Lapo Consulting. Tutti i Sistemi Operativi.</p>
         </footer>
     </section>
 
     <script>
+        // --- Translations ---
+        const translations = {
+            it: {
+                nav_why: "Perché Io?",
+                nav_services: "Servizi",
+                nav_process: "Metodo",
+                nav_book: "Prenota Consulenza",
+                hero_badge: "Accetto Nuovi Clienti per il Q4",
+                hero_title_1: "Smetti di Sognare.",
+                hero_title_2: "Inizia a Testare.",
+                hero_desc: "Creo <strong>MVP pronti per il lancio</strong>, <strong>SaaS complessi</strong> basati su AI e <strong>automazioni comprovate</strong> per founder che scelgono la velocità.",
+                hero_cta_1: "Costruisci la tua Visione",
+                hero_cta_2: "Esplora i Servizi",
+                prob_title: "Lo Sviluppo Tradizionale è <span class='text-red-500'>Rotto</span>",
+                prob_subtitle: "Hai un'idea, ma l'esecuzione sta uccidendo il tuo slancio. Ti suona familiare?",
+                prob_1_title: "\"Ci vogliono 6 mesi\"",
+                prob_1_desc: "Le agenzie tradizionali complicano tutto prima ancora che tu validi il mercato. Bruci budget mentre i competitor lanciano.",
+                prob_2_title: "\"Sviluppare costa troppo\"",
+                prob_2_desc: "Assumere un CTO o un team intero per un'idea non provata è un suicidio finanziario. Ti servono risultati, non stipendi fissi.",
+                prob_3_title: "\"Inferno Operativo\"",
+                prob_3_desc: "Stai scalando, ma il backend è un caos di fogli di calcolo e data entry manuale. Lavori 16 ore al giorno solo per stare al passo.",
+                serv_badge: "Cosa Faccio",
+                serv_title: "Ingegneria per Velocità e Intelligenza",
+                serv_1_title: "Sprint MVP",
+                serv_1_desc: "Dallo schizzo al prodotto funzionante in settimane. Costruisco MVP scalabili progettati per ottenere subito i primi clienti paganti.",
+                serv_1_li1: "Prototipazione rapida",
+                serv_1_li2: "Stack Moderno (Next.js/Supabase)",
+                serv_1_li3: "Integrazione Stripe Pronta",
+                serv_cta_start: "Inizia a Costruire",
+                serv_2_title: "SaaS Agentici",
+                serv_2_desc: "Costruisci la prossima big thing? Ingegnerizzo sistemi complessi multi-agente dove l'AI esegue task e crea valore autonomamente.",
+                serv_2_li1: "Sistemi Multi-Agent (CrewAI/LangGraph)",
+                serv_2_li2: "RAG & Vector DB",
+                serv_2_li3: "Architetture Cognitive",
+                serv_cta_discuss: "Discuti Strategia",
+                serv_3_title: "Business Ops",
+                serv_3_desc: "Elimina il lavoro manuale. Creo workflow personalizzati che gestiscono supporto clienti, lead gen e processi dati mentre dormi.",
+                serv_3_li1: "Automazione Workflow (n8n/Zapier)",
+                serv_3_li2: "Tool Interni Custom",
+                serv_3_li3: "Scraping & Arricchimento Dati",
+                serv_cta_automate: "Automatizza Ora",
+                proc_title: "Come Lavoro",
+                proc_1_title: "Scoperta e Strategia",
+                proc_1_desc: "Analizziamo il problema in una call. Niente fuffa. Definiamo lo scopo, i \"Must-Have\" e il percorso più veloce per il ROI.",
+                proc_2_title: "Build Rapida",
+                proc_2_desc: "Mi chiudo in modalità focus e programmo. Ricevi aggiornamenti costanti, ma mi concentro sul codice, non sulle slide. Vedi progressi in giorni.",
+                proc_3_title: "Lancio e Consegna",
+                proc_3_desc: "Mettiamo in produzione. Ti formo sul sistema. Il codice, gli account e la proprietà intellettuale sono tuoi. Nessun vincolo nascosto.",
+                cta_title: "Pronto a scalare?",
+                cta_desc: "Accetto solo 3 clienti al mese per garantire la massima qualità.<br>Vediamo se siamo il giusto fit.",
+                cta_btn: "Prenota una Discovery Call",
+                cta_or: "O scrivimi direttamente",
+                tooltip_copy: "Copia",
+                tooltip_copied: "Copiato!",
+                footer_text: "&copy; 2025 Lapo Consulting. Tutti i Sistemi Operativi."
+            },
+            en: {
+                nav_why: "Why Me?",
+                nav_services: "Services",
+                nav_process: "Process",
+                nav_book: "Book Consultation",
+                hero_badge: "Accepting New Clients for Q4",
+                hero_title_1: "Stop Dreaming.",
+                hero_title_2: "Start Testing.",
+                hero_desc: "I build <strong>ready-to-test MVPs</strong>, <strong>complex agentic SaaS</strong>, and <strong>proven automations</strong> for founders who value speed over bureaucracy.",
+                hero_cta_1: "Build My Vision",
+                hero_cta_2: "Explore Services",
+                prob_title: "The Traditional Dev Cycle is <span class='text-red-500'>Broken</span>",
+                prob_subtitle: "You have an idea, but execution is killing your momentum. Does this sound familiar?",
+                prob_1_title: "\"It takes 6 months\"",
+                prob_1_desc: "Traditional agencies over-engineer before you even validate the market. You burn runway while your competitors launch.",
+                prob_2_title: "\"Developers are expensive\"",
+                prob_2_desc: "Hiring a CTO or a full team for an unproven idea is financial suicide. You need output, not a payroll liability.",
+                prob_3_title: "\"Manual Ops Hell\"",
+                prob_3_desc: "You're scaling, but your backend is a mess of spreadsheets and manual data entry. You're working 16h days just to keep up.",
+                serv_badge: "What I Do",
+                serv_title: "Engineering for Speed & Intelligence",
+                serv_1_title: "MVP Sprint",
+                serv_1_desc: "Go from napkin sketch to working product in weeks. I build functional, scalable MVPs designed to get you your first paying customers immediately.",
+                serv_1_li1: "Rapid prototyping & dev",
+                serv_1_li2: "Modern Stack (Next.js/Supabase)",
+                serv_1_li3: "Stripe Integration Ready",
+                serv_cta_start: "Start Building",
+                serv_2_title: "Agentic SaaS",
+                serv_2_desc: "Building the next big thing? I engineer complex, multi-agent systems where AI autonomously executes tasks, plans strategies, and creates value.",
+                serv_2_li1: "Multi-Agent Systems (CrewAI/LangGraph)",
+                serv_2_li2: "RAG & Vector DB Implementation",
+                serv_2_li3: "Cognitive Architectures",
+                serv_cta_discuss: "Discuss Strategy",
+                serv_3_title: "Business Ops",
+                serv_3_desc: "Eliminate manual work. I create custom workflows that handle customer support, lead gen, and data processing while you sleep.",
+                serv_3_li1: "Workflow Automation (n8n/Zapier)",
+                serv_3_li2: "Custom Internal Tools",
+                serv_3_li3: "Data Scraping & Enrichment",
+                serv_cta_automate: "Automate Now",
+                proc_title: "How We Work",
+                proc_1_title: "Discovery & Strategy",
+                proc_1_desc: "We hop on a call to dissect your problem. No fluff. We define the scope, the \"Must-Haves,\" and the fastest path to ROI.",
+                proc_2_title: "Rapid Build",
+                proc_2_desc: "I go dark and code. You get regular updates, but I focus on shipping code, not slide decks. You see progress in days.",
+                proc_3_title: "Launch & Handoff",
+                proc_3_desc: "We deploy. I train you on the system. You own the code, the accounts, and the IP. No vendor lock-in.",
+                cta_title: "Ready to scale?",
+                cta_desc: "I only take on 3 clients per month to ensure quality delivery.<br>Let's see if we're a good fit.",
+                cta_btn: "Book a Discovery Call",
+                cta_or: "Or email me directly",
+                tooltip_copy: "Copy",
+                tooltip_copied: "Copied!",
+                footer_text: "&copy; 2025 Lapo Consulting. All Systems Operational."
+            }
+        };
+
+        let currentLang = 'it';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Update all text elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update Active State in Nav
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active', 'text-brand-cyan'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            
+            // Update Mobile Nav
+            if(lang === 'it') {
+                document.getElementById('mobile-btn-it').className = "text-xs font-bold text-brand-cyan";
+                document.getElementById('mobile-btn-en').className = "text-xs font-bold text-gray-400 hover:text-brand-cyan";
+            } else {
+                document.getElementById('mobile-btn-en').className = "text-xs font-bold text-brand-cyan";
+                document.getElementById('mobile-btn-it').className = "text-xs font-bold text-gray-400 hover:text-brand-cyan";
+            }
+        }
+
         // Initialize Lucide Icons
         lucide.createIcons();
 
@@ -470,11 +634,11 @@
             const email = "lapo@consulting.com";
             navigator.clipboard.writeText(email).then(() => {
                 const tooltip = document.getElementById('copy-tooltip');
-                tooltip.innerText = "Copied!";
+                tooltip.innerText = translations[currentLang].tooltip_copied;
                 tooltip.classList.remove('opacity-0');
                 setTimeout(() => {
                     tooltip.classList.add('opacity-0');
-                    setTimeout(() => tooltip.innerText = "Copy", 300);
+                    setTimeout(() => tooltip.innerText = translations[currentLang].tooltip_copy, 300);
                 }, 2000);
             });
         }
