@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapo | AI & Automation Consultant</title>
+    <meta name="description" content="Ready-to-test MVPs and proven-to-work automations. Stop burning cash on slow development.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0C10',
+                            gray: '#1F2833',
+                            cyan: '#66FCF1',
+                            teal: '#45A29E',
+                            white: '#C5C6C7'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        body {
+            background-color: #0B0C10;
+            color: #C5C6C7;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(31, 40, 51, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(102, 252, 241, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #66FCF1, #45A29E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-on-hover:hover {
+            box-shadow: 0 0 20px rgba(102, 252, 241, 0.4);
+        }
+
+        /* Canvas Background */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0C10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #45A29E;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #66FCF1;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Canvas for Dynamic Background -->
+    <div id="canvas-container">
+        <canvas id="networkCanvas"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="font-display text-2xl font-bold text-white tracking-tighter">
+                        LAPO<span class="text-brand-cyan">.AI</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#problems" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium">Why Me?</a>
+                        <a href="#services" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium">Services</a>
+                        <a href="#process" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium">Process</a>
+                        <a href="#contact" class="bg-brand-cyan text-brand-dark hover:bg-white hover:text-black px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 glow-on-hover">
+                            Book a Consultation
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel absolute w-full border-b border-gray-700">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#problems" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium">Why Me?</a>
+                <a href="#services" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium">Services</a>
+                <a href="#process" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium">Process</a>
+                <a href="#contact" class="text-brand-cyan font-bold block px-3 py-2 rounded-md text-base">Book Consultation</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative flex items-center justify-center min-h-screen pt-20 px-6">
+        <div class="text-center max-w-4xl mx-auto z-10">
+            <div class="inline-flex items-center px-4 py-2 rounded-full glass-panel mb-8 border border-brand-cyan/30 animate-float">
+                <span class="w-2 h-2 rounded-full bg-brand-cyan mr-2 animate-pulse"></span>
+                <span class="text-sm font-medium text-brand-cyan tracking-wide uppercase">Accepting New Clients for Q4</span>
+            </div>
+            
+            <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
+                Stop Dreaming. <br>
+                <span class="gradient-text">Start Testing.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                I build <strong>ready-to-test MVPs</strong>, <strong>complex agentic SaaS</strong>, and <strong>proven automations</strong> for founders who value speed over bureaucracy.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#contact" class="w-full sm:w-auto bg-brand-cyan text-brand-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-all duration-300 transform hover:-translate-y-1 glow-on-hover flex items-center justify-center">
+                    Build My Vision
+                    <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                </a>
+                <a href="#services" class="w-full sm:w-auto border border-gray-600 hover:border-brand-cyan text-gray-300 hover:text-brand-cyan px-8 py-4 rounded-lg font-medium transition-all duration-300 bg-brand-dark/50 backdrop-blur-sm">
+                    Explore Services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain Points (The "Old Way" vs You) -->
+    <section id="problems" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">The Traditional Dev Cycle is <span class="text-red-500">Broken</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">You have an idea, but execution is killing your momentum. Does this sound familiar?</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Pain 1 -->
+                <div class="glass-panel p-8 rounded-2xl border-t-4 border-transparent hover:border-red-500 transition-all duration-300 group reveal">
+                    <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                        <i data-lucide="hourglass" class="text-red-500 w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">"It takes 6 months to launch"</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Traditional agencies over-engineer before you even validate the market. You burn runway while your competitors launch.
+                    </p>
+                </div>
+
+                <!-- Pain 2 -->
+                <div class="glass-panel p-8 rounded-2xl border-t-4 border-transparent hover:border-red-500 transition-all duration-300 group reveal" style="transition-delay: 100ms;">
+                    <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                        <i data-lucide="wallet" class="text-red-500 w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">"Developers are expensive"</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Hiring a CTO or a full team for an unproven idea is financial suicide. You need output, not a payroll liability.
+                    </p>
+                </div>
+
+                <!-- Pain 3 -->
+                <div class="glass-panel p-8 rounded-2xl border-t-4 border-transparent hover:border-red-500 transition-all duration-300 group reveal" style="transition-delay: 200ms;">
+                    <div class="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                        <i data-lucide="file-warning" class="text-red-500 w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">"Manual Ops Hell"</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        You're scaling, but your backend is a mess of spreadsheets and manual data entry. You're working 16h days just to keep up.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Solution (Services) -->
+    <section id="services" class="py-24 bg-brand-gray/20 relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-brand-cyan/5 to-transparent pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20 reveal">
+                <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm">What I Do</span>
+                <h2 class="font-display text-3xl md:text-5xl font-bold text-white mt-2">Engineering for Speed & Intelligence</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Service 1: MVP -->
+                <div class="glass-panel p-8 rounded-3xl border border-brand-cyan/20 hover:border-brand-cyan/60 transition-all duration-300 reveal">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-display font-bold text-white">MVP Sprint</h3>
+                        <i data-lucide="rocket" class="text-brand-cyan w-8 h-8"></i>
+                    </div>
+                    <p class="text-gray-300 text-base mb-6 h-24">
+                        Go from napkin sketch to working product in weeks. I build functional, scalable MVPs designed to get you your first paying customers immediately.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-brand-cyan w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Rapid prototyping & dev</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-brand-cyan w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Modern Stack (Next.js/Supabase)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-brand-cyan w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Stripe Integration Ready</span>
+                        </li>
+                    </ul>
+                    <a href="#contact" class="text-brand-cyan font-bold hover:text-white flex items-center transition-colors mt-auto">
+                        Start Building <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Service 2: Agentic SaaS (NEW) -->
+                <div class="glass-panel p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500/60 transition-all duration-300 reveal" style="transition-delay: 100ms;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-display font-bold text-white">Agentic SaaS</h3>
+                        <i data-lucide="brain-circuit" class="text-purple-400 w-8 h-8"></i>
+                    </div>
+                    <p class="text-gray-300 text-base mb-6 h-24">
+                        Building the next big thing? I engineer complex, multi-agent systems where AI autonomously executes tasks, plans strategies, and creates value.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-purple-400 w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Multi-Agent Systems (CrewAI/LangGraph)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-purple-400 w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">RAG & Vector DB Implementation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-purple-400 w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Cognitive Architectures</span>
+                        </li>
+                    </ul>
+                    <a href="#contact" class="text-purple-400 font-bold hover:text-white flex items-center transition-colors mt-auto">
+                        Discuss Strategy <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Service 3: Automation -->
+                <div class="glass-panel p-8 rounded-3xl border border-brand-teal/20 hover:border-brand-teal/60 transition-all duration-300 reveal" style="transition-delay: 200ms;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-display font-bold text-white">Business Ops</h3>
+                        <i data-lucide="bot" class="text-brand-teal w-8 h-8"></i>
+                    </div>
+                    <p class="text-gray-300 text-base mb-6 h-24">
+                        Eliminate manual work. I create custom workflows that handle customer support, lead gen, and data processing while you sleep.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-brand-teal w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Workflow Automation (n8n/Zapier)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-brand-teal w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Custom Internal Tools</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check-circle-2" class="text-brand-teal w-5 h-5 mr-3 mt-1"></i>
+                            <span class="text-gray-400 text-sm">Data Scraping & Enrichment</span>
+                        </li>
+                    </ul>
+                    <a href="#contact" class="text-brand-teal font-bold hover:text-white flex items-center transition-colors mt-auto">
+                        Automate Now <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process -->
+    <section id="process" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-white">How We Work</h2>
+            </div>
+
+            <div class="relative">
+                <!-- Connecting Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-800 hidden md:block"></div>
+
+                <div class="space-y-12">
+                    <!-- Step 1 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between reveal">
+                        <div class="md:w-5/12 text-right order-2 md:order-1 pr-0 md:pr-8">
+                            <h3 class="text-xl font-bold text-white mb-2">Discovery & Strategy</h3>
+                            <p class="text-gray-400">We hop on a call to dissect your problem. No fluff. We define the scope, the "Must-Haves," and the fastest path to ROI.</p>
+                        </div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 bg-brand-cyan rounded-full flex items-center justify-center z-10 order-1 md:order-2 shadow-[0_0_15px_rgba(102,252,241,0.5)]">
+                            <span class="text-brand-dark font-bold">1</span>
+                        </div>
+                        <div class="md:w-5/12 pl-0 md:pl-8 order-3"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between reveal">
+                        <div class="md:w-5/12 order-2"></div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 bg-brand-dark border-2 border-brand-cyan rounded-full flex items-center justify-center z-10 order-1 shadow-[0_0_15px_rgba(102,252,241,0.5)]">
+                            <span class="text-brand-cyan font-bold">2</span>
+                        </div>
+                        <div class="md:w-5/12 text-left pl-0 md:pl-8 order-3">
+                            <h3 class="text-xl font-bold text-white mb-2">Rapid Build</h3>
+                            <p class="text-gray-400">I go dark and code. You get regular updates, but I focus on shipping code, not slide decks. You see progress in days.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex flex-col md:flex-row items-center justify-between reveal">
+                        <div class="md:w-5/12 text-right order-2 md:order-1 pr-0 md:pr-8">
+                            <h3 class="text-xl font-bold text-white mb-2">Launch & Handoff</h3>
+                            <p class="text-gray-400">We deploy. I train you on the system. You own the code, the accounts, and the IP. No vendor lock-in.</p>
+                        </div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 bg-brand-cyan rounded-full flex items-center justify-center z-10 order-1 md:order-2 shadow-[0_0_15px_rgba(102,252,241,0.5)]">
+                            <span class="text-brand-dark font-bold">3</span>
+                        </div>
+                        <div class="md:w-5/12 pl-0 md:pl-8 order-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Footer -->
+    <section id="contact" class="py-24 relative">
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-cyan/10 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal">
+            <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6">Ready to scale?</h2>
+            <p class="text-xl text-gray-400 mb-10">
+                I only take on 3 clients per month to ensure quality delivery.<br>
+                Let's see if we're a good fit.
+            </p>
+            
+            <div class="glass-panel p-8 rounded-2xl max-w-xl mx-auto transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="flex flex-col space-y-4">
+                    <a href="mailto:lapo@example.com" class="w-full bg-brand-cyan text-brand-dark py-4 rounded-lg font-bold text-lg hover:bg-white transition-all duration-300 glow-on-hover flex items-center justify-center group">
+                        <i data-lucide="calendar-days" class="mr-2 w-5 h-5 group-hover:rotate-12 transition-transform"></i>
+                        Book a Discovery Call
+                    </a>
+                    
+                    <div class="flex items-center justify-center space-x-4 mt-4">
+                        <div class="h-px bg-gray-700 flex-1"></div>
+                        <span class="text-gray-500 text-sm uppercase">Or email me directly</span>
+                        <div class="h-px bg-gray-700 flex-1"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center bg-brand-dark/50 p-4 rounded-lg border border-gray-700">
+                        <code class="text-brand-cyan">lapo@consulting.com</code>
+                        <button onclick="copyEmail()" class="text-gray-400 hover:text-white transition-colors relative group">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                            <span id="copy-tooltip" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity">Copy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 text-center text-gray-600 text-sm">
+            <p>&copy; 2025 Lapo Consulting. All Systems Operational.</p>
+        </footer>
+    </section>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Navbar background on scroll
+        const nav = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-brand-dark/90', 'backdrop-blur-lg', 'shadow-lg');
+            } else {
+                nav.classList.remove('bg-brand-dark/90', 'backdrop-blur-lg', 'shadow-lg');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Trigger once on load
+
+        // Copy Email Function
+        function copyEmail() {
+            const email = "lapo@consulting.com";
+            navigator.clipboard.writeText(email).then(() => {
+                const tooltip = document.getElementById('copy-tooltip');
+                tooltip.innerText = "Copied!";
+                tooltip.classList.remove('opacity-0');
+                setTimeout(() => {
+                    tooltip.classList.add('opacity-0');
+                    setTimeout(() => tooltip.innerText = "Copy", 300);
+                }, 2000);
+            });
+        }
+
+        // Dynamic Canvas Background (Network/Node effect)
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#66FCF1'; // Brand Cyan
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            if(window.innerWidth < 768) numberOfParticles = 30; // Less particles on mobile
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 0.4) - 0.2;
+                let directionY = (Math.random() * 0.4) - 0.2;
+                let color = '#66FCF1';
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        ctx.strokeStyle = 'rgba(102, 252, 241,' + opacityValue * 0.15 + ')'; // Cyan lines with low opacity
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+
+    </script>
+</body>
+</html>
