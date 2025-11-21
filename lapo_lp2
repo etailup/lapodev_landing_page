@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapo | AI & Automation Consultant</title>
+    <meta name="description" content="MVP pronti per il test e automazioni comprovate. Smetti di bruciare budget in sviluppi lenti.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Calendly Widget CSS -->
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <!-- Calendly Widget JS -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0C10',
+                            gray: '#1F2833',
+                            cyan: '#66FCF1',
+                            teal: '#45A29E',
+                            white: '#C5C6C7'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        body {
+            background-color: #0B0C10;
+            color: #C5C6C7;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(31, 40, 51, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(102, 252, 241, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #66FCF1, #45A29E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-on-hover:hover {
+            box-shadow: 0 0 25px rgba(102, 252, 241, 0.3);
+        }
+
+        /* Canvas Background */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0C10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #45A29E;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #66FCF1;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Language Switcher Styles */
+        .lang-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+        .lang-btn.active {
+            opacity: 1;
+            color: #66FCF1;
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+        }
+
+        /* Tech Stack Scroll */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body class="antialiased relative selection:bg-brand-cyan selection:text-brand-dark">
+
+    <!-- Canvas for Dynamic Background -->
+    <div id="canvas-container">
+        <canvas id="networkCanvas"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="font-display text-2xl font-bold text-white tracking-tighter">
+                        LAPO<span class="text-brand-cyan">.AI</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#work" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n="nav_work">Progetti</a>
+                        <a href="#services" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n="nav_services">Servizi</a>
+                        <a href="#about" class="hover:text-brand-cyan transition-colors px-3 py-2 rounded-md text-sm font-medium" data-i18n="nav_about">Chi Sono</a>
+                        <a href="#contact" class="bg-brand-cyan text-brand-dark hover:bg-white hover:text-black px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 glow-on-hover" data-i18n="nav_book">
+                            Prenota Consulenza
+                        </a>
+                    </div>
+                    <!-- Language Switcher -->
+                    <div class="ml-8 flex items-center space-x-2 border-l border-gray-700 pl-6">
+                        <button onclick="setLanguage('en')" class="lang-btn hover:text-white" id="btn-en">EN</button>
+                        <span class="text-gray-600">/</span>
+                        <button onclick="setLanguage('it')" class="lang-btn hover:text-white active" id="btn-it">IT</button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <button onclick="setLanguage('en')" class="text-xs font-bold text-gray-400 hover:text-brand-cyan" id="mobile-btn-en">EN</button>
+                        <span class="text-gray-600 text-xs">|</span>
+                        <button onclick="setLanguage('it')" class="text-xs font-bold text-brand-cyan" id="mobile-btn-it">IT</button>
+                    </div>
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel absolute w-full border-b border-gray-700">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#work" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium" data-i18n="nav_work">Progetti</a>
+                <a href="#services" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium" data-i18n="nav_services">Servizi</a>
+                <a href="#about" class="text-gray-300 hover:text-brand-cyan block px-3 py-2 rounded-md text-base font-medium" data-i18n="nav_about">Chi Sono</a>
+                <a href="#contact" class="text-brand-cyan font-bold block px-3 py-2 rounded-md text-base" data-i18n="nav_book">Prenota Consulenza</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative flex items-center justify-center min-h-screen pt-20 px-6">
+        <div class="text-center max-w-4xl mx-auto z-10">
+            <div class="inline-flex items-center px-4 py-2 rounded-full glass-panel mb-8 border border-brand-cyan/30 animate-float backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-brand-cyan mr-2 animate-pulse"></span>
+                <span class="text-sm font-medium text-brand-cyan tracking-wide uppercase" data-i18n="hero_badge">Slot Q4: Solo 2 Rimasti</span>
+            </div>
+            
+            <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
+                <span data-i18n="hero_title_1">Da Idea a Codice.</span> <br>
+                <span class="gradient-text" data-i18n="hero_title_2">In 14 Giorni.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed" data-i18n="hero_desc">
+                Sviluppo <strong>MVP React/Node pronti per Stripe</strong> e <strong>sistemi multi-agente AI</strong> che automatizzano il tuo business. Codice pulito, IP tua, zero fuffa.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#book-calendly" class="w-full sm:w-auto bg-brand-cyan text-brand-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-all duration-300 transform hover:-translate-y-1 glow-on-hover flex items-center justify-center group">
+                    <span data-i18n="hero_cta_1">Prenota una Demo</span>
+                    <i data-lucide="calendar" class="ml-2 w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                </a>
+                <a href="#work" class="w-full sm:w-auto border border-gray-600 hover:border-brand-cyan text-gray-300 hover:text-brand-cyan px-8 py-4 rounded-lg font-medium transition-all duration-300 bg-brand-dark/50 backdrop-blur-sm" data-i18n="hero_cta_2">
+                    Vedi il Portfolio
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Marquee -->
+    <div class="border-y border-gray-800 bg-brand-gray/30 py-8 mb-12 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-xs font-bold text-gray-500 uppercase tracking-widest mb-6" data-i18n="tech_title">Costruito con il Modern Stack</p>
+            <div class="marquee-container relative">
+                <div class="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-brand-dark to-transparent z-10"></div>
+                <div class="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-brand-dark to-transparent z-10"></div>
+                
+                <div class="marquee-content text-gray-400 flex space-x-12 items-center font-display font-bold text-xl">
+                    <!-- Repeated items for infinite scroll illusion -->
+                    <span>NEXT.JS</span> <span>•</span> <span>SUPABASE</span> <span>•</span> <span>PYTHON</span> <span>•</span> <span>LANGCHAIN</span> <span>•</span> <span>OPENAI API</span> <span>•</span> <span>STRIPE</span> <span>•</span> <span>DOCKER</span> <span>•</span> <span>POSTGRESQL</span> <span>•</span> <span>TAILWIND</span> <span>•</span> <span>NEXT.JS</span> <span>•</span> <span>SUPABASE</span> <span>•</span> <span>PYTHON</span> <span>•</span> <span>LANGCHAIN</span> <span>•</span> <span>OPENAI API</span> <span>•</span> <span>STRIPE</span> <span>•</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selected Work (New Section with Photos) -->
+    <section id="work" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+                <div>
+                    <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm" data-i18n="work_badge">Casi Studio</span>
+                    <h2 class="font-display text-3xl md:text-5xl font-bold text-white mt-2" data-i18n="work_title">Cosa ho costruito</h2>
+                </div>
+                <a href="#contact" class="text-gray-400 hover:text-white flex items-center mt-4 md:mt-0 transition-colors" data-i18n="work_more">
+                    Vedi altri progetti <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="space-y-20">
+                <!-- Project 1 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+                    <div class="order-2 lg:order-1">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-blue-900/50 text-blue-400 border border-blue-700">Fintech</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-gray-800 text-gray-300 border border-gray-700">MVP</span>
+                        </div>
+                        <h3 class="text-3xl font-display font-bold text-white mb-4">CryptoDash Analytics</h3>
+                        <p class="text-gray-400 text-lg mb-6 leading-relaxed" data-i18n="proj_1_desc">
+                            Un dashboard di analisi predittiva per trader. Sviluppato in 3 settimane. Include autenticazione sicura, grafici in tempo reale tramite WebSocket e pagamenti ricorrenti con Stripe.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-gray-500 font-mono text-sm">
+                            <li>> Stack: React, Node.js, WebSockets</li>
+                            <li>> Risultato: Acquisiti 50 utenti beta in 7 giorni</li>
+                        </ul>
+                        <a href="#contact" class="text-brand-cyan font-bold hover:underline">Vedi Case Study</a>
+                    </div>
+                    <div class="order-1 lg:order-2 relative group">
+                        <div class="absolute -inset-2 bg-gradient-to-r from-blue-600 to-brand-cyan opacity-20 group-hover:opacity-40 blur-lg transition-opacity duration-500"></div>
+                        <div class="relative rounded-xl overflow-hidden border border-gray-700 h-64 md:h-80">
+                            <img src="https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=2500&auto=format&fit=crop" alt="Dashboard Interface" class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+                    <div class="order-1">
+                        <div class="relative group">
+                            <div class="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 opacity-20 group-hover:opacity-40 blur-lg transition-opacity duration-500"></div>
+                            <div class="relative rounded-xl overflow-hidden border border-gray-700 h-64 md:h-80">
+                                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2500&auto=format&fit=crop" alt="AI Interface" class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-2">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-purple-900/50 text-purple-400 border border-purple-700">AI Agent</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-gray-800 text-gray-300 border border-gray-700">Automation</span>
+                        </div>
+                        <h3 class="text-3xl font-display font-bold text-white mb-4">LegalDoc Parser AI</h3>
+                        <p class="text-gray-400 text-lg mb-6 leading-relaxed" data-i18n="proj_2_desc">
+                            Sistema RAG (Retrieval Augmented Generation) che legge 500+ pagine di contratti PDF ed estrae le clausole di rischio in secondi. Risparmio di 20 ore settimanali per il team legale.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-gray-500 font-mono text-sm">
+                            <li>> Stack: Python, LangChain, OpenAI, Pinecone</li>
+                            <li>> Risultato: 95% accuratezza nell'estrazione</li>
+                        </ul>
+                        <a href="#contact" class="text-brand-cyan font-bold hover:underline">Richiedi Demo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Details (Refined) -->
+    <section id="services" class="py-24 bg-brand-gray/20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20 reveal">
+                <span class="text-brand-cyan font-bold tracking-widest uppercase text-sm" data-i18n="serv_badge">Competenze</span>
+                <h2 class="font-display text-3xl md:text-5xl font-bold text-white mt-2" data-i18n="serv_title">Ingegneria Specifica, Non Generica</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- MVP -->
+                <div class="glass-panel p-8 rounded-3xl border border-brand-cyan/20 hover:border-brand-cyan/60 transition-all duration-300 reveal relative group">
+                    <i data-lucide="code-2" class="absolute top-8 right-8 text-brand-cyan/10 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-2xl font-display font-bold text-white mb-4" data-i18n="serv_1_title">Sviluppo MVP Full-Stack</h3>
+                    <p class="text-gray-400 mb-6 text-sm leading-relaxed" data-i18n="serv_1_desc">
+                        Non uso template WordPress. Scrivo codice React/Next.js scalabile. Ti consegno una web app completa con login, database e pagamenti in 2-3 settimane.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm text-gray-300">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-brand-cyan"></i> React & Node.js</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-brand-cyan"></i> Database Design (SQL)</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-brand-cyan"></i> Stripe Payments</li>
+                    </ul>
+                </div>
+
+                <!-- AI Agents -->
+                <div class="glass-panel p-8 rounded-3xl border border-purple-500/20 hover:border-purple-500/60 transition-all duration-300 reveal relative group">
+                    <i data-lucide="bot" class="absolute top-8 right-8 text-purple-500/10 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-2xl font-display font-bold text-white mb-4" data-i18n="serv_2_title">AI Agents & LLMs</h3>
+                    <p class="text-gray-400 mb-6 text-sm leading-relaxed" data-i18n="serv_2_desc">
+                        Creazione di assistenti virtuali intelligenti che possono "agire". Dall'analisi di PDF al customer service automatizzato che si interfaccia col tuo CRM.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm text-gray-300">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-purple-400"></i> Custom Chatbots (RAG)</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-purple-400"></i> OpenAI / Claude API</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-purple-400"></i> Prompt Engineering</li>
+                    </ul>
+                </div>
+
+                <!-- Automation -->
+                <div class="glass-panel p-8 rounded-3xl border border-brand-teal/20 hover:border-brand-teal/60 transition-all duration-300 reveal relative group">
+                    <i data-lucide="workflow" class="absolute top-8 right-8 text-brand-teal/10 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="text-2xl font-display font-bold text-white mb-4" data-i18n="serv_3_title">Process Automation</h3>
+                    <p class="text-gray-400 mb-6 text-sm leading-relaxed" data-i18n="serv_3_desc">
+                        Connetto i tuoi software (Gmail, Slack, Airtable) per eliminare il data entry. Script Python personalizzati o workflow n8n complessi.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm text-gray-300">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-brand-teal"></i> n8n & Zapier Expert</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-brand-teal"></i> Web Scraping</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-brand-teal"></i> API Integrations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section (New) -->
+    <section id="about" class="py-24 relative">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl flex flex-col md:flex-row gap-12 items-center reveal">
+                <div class="w-full md:w-1/3">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-brand-cyan blur-2xl opacity-20 rounded-full"></div>
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" alt="Lapo Portrait" class="relative rounded-2xl border-2 border-brand-cyan/30 shadow-2xl grayscale hover:grayscale-0 transition-all duration-500">
+                    </div>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6" data-i18n="about_title">Ciao, sono Lapo.</h2>
+                    <p class="text-gray-300 text-lg mb-6 leading-relaxed" data-i18n="about_p1">
+                        Non sono un'agenzia con 10 project manager. Sono uno sviluppatore e consulente AI che parla direttamente con te.
+                    </p>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed" data-i18n="about_p2">
+                        Ho visto troppe startup fallire perché hanno speso 6 mesi a "lucidare" un prodotto che nessuno voleva. La mia filosofia è semplice: <strong>Speed is Strategy</strong>. Costruiamo l'essenziale, lo lanciamo, e iteriamo sui dati reali.
+                    </p>
+                    <div class="flex space-x-4">
+                        <div class="text-center">
+                            <span class="block text-3xl font-bold text-white">20+</span>
+                            <span class="text-xs text-gray-500 uppercase">MVP Lanciati</span>
+                        </div>
+                        <div class="w-px bg-gray-700 h-12"></div>
+                        <div class="text-center">
+                            <span class="block text-3xl font-bold text-white">4 Anni</span>
+                            <span class="text-xs text-gray-500 uppercase">Esperienza Full Stack</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendly Section -->
+    <section id="book-calendly" class="py-24 bg-black relative">
+        <div class="max-w-4xl mx-auto px-6 text-center mb-10">
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white" data-i18n="cal_title">Prenota una Sessione Strategica</h2>
+            <p class="text-gray-400 mt-4" data-i18n="cal_sub">Scegli uno slot qui sotto. Parleremo del tuo progetto e se posso aiutarti.</p>
+        </div>
+        <!-- Calendly inline widget begin -->
+        <div class="calendly-inline-widget" data-url="https://calendly.com/google-gemini-demo/30min?hide_gdpr_banner=1&background_color=0b0c10&text_color=ffffff&primary_color=66fcf1" style="min-width:320px;height:700px;"></div>
+        <!-- Calendly inline widget end -->
+    </section>
+
+    <!-- Contact Form & Footer -->
+    <section id="contact" class="py-24 relative bg-brand-gray/10">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8 relative z-10 reveal">
+            <div class="text-center mb-12">
+                <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-6" data-i18n="contact_title">Contattami via Email</h2>
+                <p class="text-gray-400" data-i18n="contact_sub">Preferisci scrivere? Compila il form. Ti rispondo entro 24h.</p>
+            </div>
+            
+            <div class="glass-panel p-8 md:p-10 rounded-2xl">
+                <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-2">Nome</label>
+                            <input type="text" id="name" required class="w-full bg-brand-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-2">Email</label>
+                            <input type="email" id="email" required class="w-full bg-brand-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-400 mb-2">Budget Stimato</label>
+                        <select id="budget" class="w-full bg-brand-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan transition-colors">
+                            <option value="<2k">&lt; €2,000 (Consulting)</option>
+                            <option value="2k-5k">€2,000 - €5,000 (Small MVP)</option>
+                            <option value="5k-10k">€5,000 - €10,000 (Full App)</option>
+                            <option value="10k+">€10,000+ (Complex System)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-400 mb-2">Messaggio</label>
+                        <textarea id="message" rows="4" required class="w-full bg-brand-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-brand-cyan focus:outline-none focus:ring-1 focus:ring-brand-cyan transition-colors"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-cyan text-brand-dark font-bold py-4 rounded-lg hover:bg-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg shadow-brand-cyan/20">
+                        <span data-i18n="btn_send">Invia Messaggio</span>
+                    </button>
+                </form>
+                <div id="successMessage" class="hidden mt-6 p-4 bg-green-900/30 border border-green-500/50 rounded-lg text-center">
+                    <p class="text-green-400 font-bold">Email Client Aperto!</p>
+                    <p class="text-sm text-gray-400">Controlla la tua app di posta per inviare il messaggio.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-24 border-t border-gray-800 pt-12 pb-8 text-center text-gray-600 text-sm">
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="hover:text-brand-cyan"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-brand-cyan"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="#" class="hover:text-brand-cyan"><i data-lucide="github" class="w-6 h-6"></i></a>
+            </div>
+            <p data-i18n="footer_text">&copy; 2025 Lapo Consulting. P.IVA 1234567890.</p>
+        </footer>
+    </section>
+
+    <script>
+        // --- Translations ---
+        const translations = {
+            it: {
+                nav_work: "Progetti",
+                nav_services: "Servizi",
+                nav_about: "Chi Sono",
+                nav_book: "Prenota Consulenza",
+                hero_badge: "Slot Q4: Solo 2 Rimasti",
+                hero_title_1: "Da Idea a Codice.",
+                hero_title_2: "In 14 Giorni.",
+                hero_desc: "Sviluppo <strong>MVP React/Node pronti per Stripe</strong> e <strong>sistemi multi-agente AI</strong> che automatizzano il tuo business. Codice pulito, IP tua, zero fuffa.",
+                hero_cta_1: "Prenota una Demo",
+                hero_cta_2: "Vedi il Portfolio",
+                tech_title: "Costruito con il Modern Stack",
+                work_badge: "Casi Studio",
+                work_title: "Cosa ho costruito",
+                work_more: "Vedi altri progetti",
+                proj_1_desc: "Un dashboard di analisi predittiva per trader. Sviluppato in 3 settimane. Include autenticazione sicura, grafici in tempo reale tramite WebSocket e pagamenti ricorrenti con Stripe.",
+                proj_2_desc: "Sistema RAG (Retrieval Augmented Generation) che legge 500+ pagine di contratti PDF ed estrae le clausole di rischio in secondi. Risparmio di 20 ore settimanali per il team legale.",
+                serv_badge: "Competenze",
+                serv_title: "Ingegneria Specifica, Non Generica",
+                serv_1_title: "Sviluppo MVP Full-Stack",
+                serv_1_desc: "Non uso template WordPress. Scrivo codice React/Next.js scalabile. Ti consegno una web app completa con login, database e pagamenti in 2-3 settimane.",
+                serv_2_title: "AI Agents & LLMs",
+                serv_2_desc: "Creazione di assistenti virtuali intelligenti che possono \"agire\". Dall'analisi di PDF al customer service automatizzato che si interfaccia col tuo CRM.",
+                serv_3_title: "Process Automation",
+                serv_3_desc: "Connetto i tuoi software (Gmail, Slack, Airtable) per eliminare il data entry. Script Python personalizzati o workflow n8n complessi.",
+                about_title: "Ciao, sono Lapo.",
+                about_p1: "Non sono un'agenzia con 10 project manager. Sono uno sviluppatore e consulente AI che parla direttamente con te.",
+                about_p2: "Ho visto troppe startup fallire perché hanno speso 6 mesi a \"lucidare\" un prodotto che nessuno voleva. La mia filosofia è semplice: <strong>Speed is Strategy</strong>. Costruiamo l'essenziale, lo lanciamo, e iteriamo sui dati reali.",
+                cal_title: "Prenota una Sessione Strategica",
+                cal_sub: "Scegli uno slot qui sotto. Parleremo del tuo progetto e se posso aiutarti.",
+                contact_title: "Contattami via Email",
+                contact_sub: "Preferisci scrivere? Compila il form. Ti rispondo entro 24h.",
+                btn_send: "Invia Messaggio",
+                footer_text: "&copy; 2025 Lapo Consulting. P.IVA 1234567890."
+            },
+            en: {
+                nav_work: "Work",
+                nav_services: "Services",
+                nav_about: "About",
+                nav_book: "Book Consultation",
+                hero_badge: "Q4 Slots: Only 2 Left",
+                hero_title_1: "From Idea to Code.",
+                hero_title_2: "In 14 Days.",
+                hero_desc: "I build <strong>Stripe-ready React/Node MVPs</strong> and <strong>AI multi-agent systems</strong> that automate your business. Clean code, your IP, no fluff.",
+                hero_cta_1: "Book a Demo",
+                hero_cta_2: "View Portfolio",
+                tech_title: "Built with Modern Stack",
+                work_badge: "Case Studies",
+                work_title: "What I've Built",
+                work_more: "See more projects",
+                proj_1_desc: "A predictive analytics dashboard for traders. Built in 3 weeks. Features secure auth, real-time WebSocket charts, and recurring Stripe payments.",
+                proj_2_desc: "RAG System that reads 500+ pages of PDF contracts and extracts risk clauses in seconds. Saves 20 hours/week for the legal team.",
+                serv_badge: "Expertise",
+                serv_title: "Specific Engineering, Not Generic",
+                serv_1_title: "Full-Stack MVP Dev",
+                serv_1_desc: "I don't use WordPress templates. I write scalable React/Next.js code. I deliver a full web app with login, database, and payments in 2-3 weeks.",
+                serv_2_title: "AI Agents & LLMs",
+                serv_2_desc: "Creating smart virtual assistants that can \"act\". From PDF analysis to automated customer service that interfaces with your CRM.",
+                serv_3_title: "Process Automation",
+                serv_3_desc: "I connect your software (Gmail, Slack, Airtable) to kill data entry. Custom Python scripts or complex n8n workflows.",
+                about_title: "Hi, I'm Lapo.",
+                about_p1: "I'm not an agency with 10 project managers. I am a developer and AI consultant who talks directly to you.",
+                about_p2: "I've seen too many startups fail because they spent 6 months \"polishing\" a product nobody wanted. My philosophy is simple: <strong>Speed is Strategy</strong>. We build the essential, launch it, and iterate on real data.",
+                cal_title: "Book a Strategy Session",
+                cal_sub: "Pick a slot below. We'll discuss your project and if I can help.",
+                contact_title: "Contact via Email",
+                contact_sub: "Prefer writing? Fill the form. I reply within 24h.",
+                btn_send: "Send Message",
+                footer_text: "&copy; 2025 Lapo Consulting. VAT 1234567890."
+            }
+        };
+
+        let currentLang = 'it';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Update all text elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update Active State in Nav
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active', 'text-brand-cyan'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            
+            // Update Mobile Nav
+            if(lang === 'it') {
+                document.getElementById('mobile-btn-it').className = "text-xs font-bold text-brand-cyan";
+                document.getElementById('mobile-btn-en').className = "text-xs font-bold text-gray-400 hover:text-brand-cyan";
+            } else {
+                document.getElementById('mobile-btn-en').className = "text-xs font-bold text-brand-cyan";
+                document.getElementById('mobile-btn-it').className = "text-xs font-bold text-gray-400 hover:text-brand-cyan";
+            }
+        }
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Navbar background on scroll
+        const nav = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-brand-dark/90', 'backdrop-blur-lg', 'shadow-lg');
+            } else {
+                nav.classList.remove('bg-brand-dark/90', 'backdrop-blur-lg', 'shadow-lg');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // --- Contact Form Logic ---
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const budget = document.getElementById('budget').value;
+            const message = document.getElementById('message').value;
+            
+            const subject = `Nuova richiesta da ${name} (Budget: ${budget})`;
+            const body = `Nome: ${name}%0D%0AEmail: ${email}%0D%0ABudget: ${budget}%0D%0A%0D%0AMessaggio:%0D%0A${message}`;
+            
+            // Use mailto to open user's email client (Most robust for static sites)
+            window.location.href = `mailto:lapo@consulting.com?subject=${subject}&body=${body}`;
+            
+            // Show success UI
+            document.getElementById('successMessage').classList.remove('hidden');
+        }
+
+        // Dynamic Canvas Background
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#66FCF1';
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 12000;
+            if(window.innerWidth < 768) numberOfParticles = 20;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 0.2) - 0.1;
+                let directionY = (Math.random() * 0.2) - 0.1;
+                let color = '#66FCF1';
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        ctx.strokeStyle = 'rgba(102, 252, 241,' + opacityValue * 0.1 + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+
+    </script>
+</body>
+</html>
